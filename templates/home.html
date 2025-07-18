@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e1f0ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .message-box {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 { color: #273c75; margin-bottom:6px; }
+        p  { margin:0; color:#2f3640; }
+    </style>
+</head>
+<body>
+    <div class="message-box">
+        <h1>Welcome, {{ name }}!</h1>
+        <p>{{ email }}</p>
+        <br>
+        <a href="/logout">Logout</a>
+    </div>
+</body>
+</html>

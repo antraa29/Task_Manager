@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Tasks</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f6fa;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: #ffe4ec;
+            color: black;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -260px;
+            padding: 30px 20px;
+            transition: left 0.3s ease;
+            z-index: 999;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar.open {
+            left: 0;
+        }
+
+        .sidebar h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: black;
+        }
+
+        .user-info {
+            font-size: 14px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            color: black;
+        }
+
+        .sidebar a {
+            display: block;
+            margin: 12px 0;
+            color: black;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover {
+            background: #ffd6e8;
+        }
+
+        /* Toggle button */
+        .menu-btn {
+            position: fixed;
+            top: 15px;
+            left: 20px;
+            background: #273c75;
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 4px;
+            z-index: 1000;
+        }
+
+        /* Main content */
+        .main {
+            margin-left: 0;
+            padding: 60px 30px 30px 30px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .main.shifted {
+            margin-left: 250px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2f3640;
+            margin-bottom: 30px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .top-bar form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-bar input[type="text"] {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .top-bar button {
+            padding: 8px 12px;
+            background-color: #273c75;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .top-bar .filters a {
+            margin: 5px;
+            padding: 6px 12px;
+            background: #dcdde1;
+            color: #2f3640;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .top-bar .filters a:hover {
+            background: #bdc3c7;
+        }
+
+        .task-box {
+            background: white;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .task-box h3 {
+            margin: 0 0 10px;
+            color: #192a56;
+        }
+
+        .meta {
+            font-size: 0.9em;
+            color: #57606f;
+            margin-bottom: 10px;
+        }
+
+        .category, .collab {
+            font-size: 0.85em;
+            color: #40739e;
+            margin-top: 4px;
+        }
+
+        .status-done {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .actions a {
+            margin-right: 12px;
+            text-decoration: none;
+            color: #0097e6;
+            font-weight: 500;
+        }
+
+        .actions a:hover {
+            text-decoration: underline;
+        }
+
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 100vh;
+                left: -100%;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .main.shifted {
+                margin-left: 0;
+            }
+
+            .menu-btn {
+                top: 10px;
+                left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar toggle button -->
+    <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <h2>👤 My Account</h2>
+        <div class="user-info">
+            <strong>{{ user.name }}</strong><br>
+            {{ user.email }}<br>
+            Username: {{ user.username }}<br>
+            Joined: {{ user.created_at.strftime('%b %d, %Y') }}
+        </div>
+        <a href="/tasks" onclick="closeSidebar()">📋 Tasks</a>
+        <a href="/add-task" onclick="closeSidebar()">➕ Add Task</a>
+        <a href="/logout" onclick="closeSidebar()">🚪 Logout</a>
+    </div>
+
+    <!-- Main content -->
+    <div class="main" id="main-content">
+        <h2>📝 Your Task List</h2>
+
+        <div class="top-bar">
+            <!-- 🔍 Search Form -->
+            <form method="GET" action="/tasks">
+                <input type="text" name="search" placeholder="Search tasks..." value="{{ request.args.get('search', '') }}">
+                <button type="submit">🔍</button>
+            </form>
+
+            <!-- 🎯 Priority Filter Links -->
+            <div class="filters">
+                Filter:
+                <a href="/tasks">All</a>
+                <a href="/tasks?priority=High">High</a>
+                <a href="/tasks?priority=Medium">Medium</a>
+                <a href="/tasks?priority=Low">Low</a>
+            </div>
+        </div>
+
+        {% for task in tasks %}
+        <div class="task-box">
+            <h3>{{ task.title }}</h3>
+            <p class="meta">📆 Due: {{ task.due_date.strftime('%Y-%m-%d') }} |
+                ⚡ Priority: {{ task.priority }} |
+                ✅ Status: <span class="status-{{ task.status }}">{{ task.status|capitalize }}</span>
+            </p>
+            {% if task.description %}
+            <p>{{ task.description }}</p>
+            {% endif %}
+            {% if task.category %}
+            <p class="category">📁 Category: {{ task.category }}</p>
+            {% endif %}
+            {% if task.collaborators %}
+            <p class="collab">👥 Collaborators: {{ task.collaborators }}</p>
+            {% endif %}
+            <div class="actions">
+                <a href="/edit-task/{{ task.id }}">✏️ Edit</a>
+                <a href="/delete-task/{{ task.id }}" onclick="return confirm('Delete this task?')">🗑️ Delete</a>
+                <a href="/toggle-task/{{ task.id }}">
+                    {% if task.status == 'pending' %}✅ Mark as Done{% else %}↩️ Mark as Pending{% endif %}
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <p style="text-align:center; margin-top: 40px;">No tasks yet. Start by adding one! 🚀</p>
+        {% endfor %}
+    </div>
+
+    <!-- JavaScript for sidebar toggle -->
+    <script>
+        function toggleSidebar() {
+            document.getElementById("sidebar").classList.toggle("open");
+            document.getElementById("main-content").classList.toggle("shifted");
+        }
+
+        function closeSidebar() {
+            document.getElementById("sidebar").classList.remove("open");
+            document.getElementById("main-content").classList.remove("shifted");
+        }
+    </script>
+
+</body>
+</html>

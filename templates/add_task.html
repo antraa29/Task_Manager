@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Task</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #e1f0ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+            width: 360px;
+        }
+        h2 {
+            text-align: center;
+            color: #273c75;
+        }
+        input, textarea, select, button {
+            width: 100%;
+            margin: 8px 0;
+            padding: 10px;
+            border: 1px solid #dcdde1;
+            border-radius: 6px;
+        }
+        button {
+            background: #44bd32;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #4cd137;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <h2>Add a New Task</h2>
+        <form method="POST">
+            <input name="title" placeholder="Task Title" required>
+
+            <textarea name="description" placeholder="Task Description"></textarea>
+
+            <input type="date" name="due_date" required>
+
+            <select name="priority" required>
+                <option value="">Select Priority</option>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+            </select>
+
+            <input name="category" placeholder="Category (e.g., Work, Personal)">
+
+            <input name="collaborators" placeholder="Collaborators (emails, comma-separated)">
+
+            <button type="submit">Add Task</button>
+        </form>
+    </div>
+</body>
+</html>
