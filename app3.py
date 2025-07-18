@@ -18,7 +18,7 @@ db = SQLAlchemy(app)
 
 # ───── Google OAuth ─────
 google_bp = make_google_blueprint(
-    client_id="your client is",
+    client_id="your client id",
     client_secret="your client secret",
     redirect_to="home",
     scope=[
