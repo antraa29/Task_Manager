@@ -18,8 +18,8 @@ db = SQLAlchemy(app)
 
 # ───── Google OAuth ─────
 google_bp = make_google_blueprint(
-    client_id="73687569864-apm3i9f0krbookq8hm09nqrpr5csba2b.apps.googleusercontent.com",
-    client_secret="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",
+    client_id="your client is",
+    client_secret="your client secret",
     redirect_to="home",
     scope=[
         "https://www.googleapis.com/auth/userinfo.email",
