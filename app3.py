@@ -1,3 +1,10 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, date
@@ -18,8 +25,12 @@ db = SQLAlchemy(app)
 
 # ───── Google OAuth ─────
 google_bp = make_google_blueprint(
+    HEAD
     client_id="your client id",
     client_secret="your client secret",
+
+
+    0743013 (Moved secrets to .env and updated .gitignore)
     redirect_to="home",
     scope=[
         "https://www.googleapis.com/auth/userinfo.email",
