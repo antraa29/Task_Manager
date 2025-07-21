@@ -1,16 +1,16 @@
 from dotenv import load_dotenv
 import os
 
+# ───── Load environment variables ─────
 load_dotenv()
-
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, date
+from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_dance.contrib.google import make_google_blueprint, google
-import os
 
 # ───── Config ─────
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
@@ -25,12 +25,8 @@ db = SQLAlchemy(app)
 
 # ───── Google OAuth ─────
 google_bp = make_google_blueprint(
-    HEAD
-    client_id="your client id",
-    client_secret="your client secret",
-
-
-    0743013 (Moved secrets to .env and updated .gitignore)
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
     redirect_to="home",
     scope=[
         "https://www.googleapis.com/auth/userinfo.email",
@@ -170,6 +166,7 @@ def tasks():
     tasks = task_query.order_by(Task.due_date).all()
 
     return render_template("tasks.html", tasks=tasks, user=user)
+
 
 @app.route("/add-task", methods=["GET", "POST"])
 def add_task():
